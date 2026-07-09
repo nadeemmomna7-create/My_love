@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Muneeb ✨</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Georgia', serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1216, #2d1b24);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        /* Ambient floating petals */
+        .petal {
+            position: absolute;
+            background: linear-gradient(to bottom right, #ffb3ba, #ffdfd3);
+            border-radius: 150% 0 150% 150%;
+            pointer-events: none;
+            opacity: 0.7;
+            animation: fadeAndFloat 7s linear infinite;
+        }
+
+        @keyframes fadeAndFloat {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Outer Frame */
+        .wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 450px;
+            height: 550px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Envelope / Reveal Container */
+        .card-container {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hidden Letter Content (Sits in the background) */
+        .letter-content {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 1.5s ease-in-out;
+            pointer-events: none;
+            text-align: center;
+        }
+
+        .letter-content.reveal {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .letter-content h1 {
+            font-size: 28px;
+            color: #ffb3ba;
+            margin-bottom: 20px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .letter-content p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #f0e6eb;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .signature {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #ffb3ba;
+        }
+
+        /* Foreground Scratch Canvas Layer */
+        .scratch-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">✨</text></svg>'), auto;
+            transition: opacity 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #251820;
+        }
+
+        .scratch-layer.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #scratchCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+        }
+
+        .scratch-instruction {
+            position: relative;
+            z-index: 6;
+            pointer-events: none;
+            color: #ffffff;
+            font-size: 18px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.4);
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="card-container">
+            
+            <!-- Hidden message revealed after scratching -->
+            <div class="letter-content" id="letter">
+                <h1>To Muneeb,</h1>
+                <p>Some people just make the world feel a little bit brighter, calmer, and infinitely more beautiful the moment they step into it.</p>
+                <p>For me, that person is you.</p>
+                <p>Beyond all the spoken words, I wanted to create a quiet, permanent space just to remind you how deeply special you are to me, and how much I value every single detail of who you are.</p>
+                <p>Thank you for simply being you. ✨</p>
+                <div class="signature">With all my heart ❤️</div>
+            </div>
+
+            <!-- Scratch Card Overlay -->
+            <div class="scratch-layer" id="scratchLayer">
+                <div class="scratch-instruction">✨ Muneeb, scratch here... ✨</div>
+                <canvas id="scratchCanvas"></canvas>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Background Floating Petals
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.width = Math.random() * 15 + 10 + 'px';
+            petal.style.height = Math.random() * 15 + 10 + 'px';
+            petal.style.animationDuration = Math.random() * 4 + 5 + 's';
+            document.body.appendChild(petal);
+            setTimeout(() => petal.remove(), 7000);
+        }
+        setInterval(createPetal, 400);
+
+        // Scratch Card Logic
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        const scratchLayer = document.getElementById('scratchLayer');
+        const letter = document.getElementById('letter');
+        
+        let isDrawing = false;
+        let totalPixels = 0;
+        let clearedPixels = 0;
+
+        function resizeCanvas() {
+            canvas.width = scratchLayer.offsetWidth;
+            canvas.height = scratchLayer.offsetHeight;
+            
+            // Create elegant matte gold/rose gold metallic texture
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            grad.addColorStop(0, '#a37081');
+            grad.addColorStop(0.5, '#e6b8c6');
+            grad.addColorStop(1, '#6b4351');
+            
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Add subtle stardust pattern to the scratch surface
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            for (let i = 0; i < 300; i++) {
+                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
+            }
+            
+            totalPixels = canvas.width * canvas.height;
+        }
+
+        window.addEventListener('load', resizeCanvas);
+
+        // Handle scratching mechanics
+        function scratch(e) {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            // Handle both desktop mouse and mobile touch inputs
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 35, 0, Math.PI * 2); // Brush size
+            ctx.fill();
+            
+            checkScratchPercentage();
+        }
+
+        function checkScratchPercentage() {
+            // Check canvas data periodically to see how much is cleared
+            if (Math.random() > 0.1) return; 
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+            let transparentCount = 0;
+
+            for (let i = 3; i < pixels.length; i += 4) {
+                if (pixels[i] === 0) transparentCount++;
+            }
+
+            // If 40% or more is cleared, instantly fade away the remaining overlay nicely
+            if ((transparentCount / (pixels.length / 4)) > 0.4) {
+                scratchLayer.classList.add('fade-out');
+                letter.classList.add('reveal');
+            }
+        }
+
+        // Event Listeners for Interaction
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mousemove', scratch);
+
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); });
+        canvas.addEventListener('touchend', () => isDrawing = false);
+        canvas.addEventListener('touchmove', scratch);
+    </script>
+</body>
+</html>
+
