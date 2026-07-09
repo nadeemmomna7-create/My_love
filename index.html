@@ -1,5 +1,5 @@
-                
-            <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -52,7 +52,7 @@
             z-index: 10;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            min-height: 300px;
+            min-height: 320px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -95,9 +95,16 @@
             margin-top: 10px;
         }
 
-        /* Action Button */
-        .next-btn {
+        /* Navigation & Choice Buttons */
+        .btn-container {
             margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn {
             background: linear-gradient(90deg, #ff758c, #ff7eb3);
             color: white;
             border: none;
@@ -110,8 +117,13 @@
             transition: transform 0.2s, background 0.2s;
         }
 
-        .next-btn:active {
+        .btn:active {
             transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: #777;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .hidden {
@@ -127,7 +139,9 @@
         <div class="slide active" id="slide1">
             <h1>Muhammad Muneeb Kashif...</h1>
             <p>I have something special to tell you. ✨</p>
-            <p style="font-size: 14px; color: #888; margin-top: 10px;">(Click the button below to continue)</p>
+            <div class="btn-container">
+                <button class="btn" onclick="nextSlide()">Next ✨</button>
+            </div>
         </div>
 
         <!-- POP UP 2: The Confession -->
@@ -135,31 +149,52 @@
             <h1>I Love You ❤️</h1>
             <div class="highlight">Seni seviyorum</div>
             <p style="margin-top: 15px;">Every single day, you make my life infinitely more beautiful just by being in it.</p>
+            <div class="btn-container">
+                <button class="btn" onclick="nextSlide()">Next ✨</button>
+            </div>
         </div>
 
         <!-- POP UP 3: Sweet Line -->
         <div class="slide" id="slide3">
             <h1>You are my safe haven... 🌸</h1>
             <p>Beyond all the spoken words, you are the person who brings genuine, quiet calm to my chaotic world.</p>
+            <div class="btn-container">
+                <button class="btn" onclick="nextSlide()">Next ✨</button>
+            </div>
         </div>
 
-        <!-- POP UP 4: The Intelligence Line -->
+        <!-- POP UP 4: The Intelligence Line (With Interactive Choice) -->
         <div class="slide" id="slide4">
             <h1>A serious question... 👀</h1>
-            <p class="highlight" style="font-size: 20px; line-height: 1.5; color: #4a4a4a; font-weight: normal;">
+            <p class="highlight" style="font-size: 20px; line-height: 1.5; color: #4a4a4a; font-weight: normal; margin-bottom: 10px;">
                 Would you like to inherit your intelligence to my kids? 🧠✨
             </p>
+            <div class="btn-container">
+                <button class="btn" onclick="nextSlide()">Yes, definitely! 😍</button>
+                <button class="btn btn-secondary" onclick="playfulRejectKids()">No</button>
+            </div>
         </div>
 
-        <!-- POP UP 5: The Ultimate Proposal -->
+        <!-- POP UP 5: The Ultimate Proposal (With Lock Choice) -->
         <div class="slide" id="slide5">
             <h1>And finally... 💍</h1>
             <div class="highlight" style="font-size: 28px; margin-bottom: 15px;">Will you marry me?</div>
             <p>Let's make our own beautiful forever together. 🥰❤️</p>
+            <div class="btn-container">
+                <button class="btn" onclick="nextSlide()">Yes! 💍❤️</button>
+                <button class="btn btn-secondary" id="marryNoBtn" onclick="playfulRejectMarry()">No</button>
+            </div>
         </div>
 
-        <!-- The Single Navigation Button -->
-        <button class="next-btn" id="actionButton" onclick="nextSlide()">Next ✨</button>
+        <!-- POP UP 6: The Precise & Playful Ending -->
+        <div class="slide" id="slide6">
+            <h1>Gotcha! 😉</h1>
+            <p class="highlight" style="font-size: 22px; line-height: 1.5; margin-bottom: 15px;">
+                You don't even have the option to say no to me anyway. 🤭❤️
+            </p>
+            <p>You are officially stuck with me forever. I can't wait! 🥰✨</p>
+        </div>
+
     </div>
 
     <script>
@@ -178,7 +213,6 @@
 
         // Slide State Logic
         let currentSlide = 1;
-        const totalSlides = 5;
 
         function nextSlide() {
             // Hide current slide
@@ -188,20 +222,26 @@
             // Move to next slide
             currentSlide++;
 
-            if (currentSlide <= totalSlides) {
-                const nextElement = document.getElementById(`slide${currentSlide}`);
+            // Show next slide
+            const nextElement = document.getElementById(`slide${currentSlide}`);
+            if (nextElement) {
                 nextElement.classList.add('active');
-                
-                // Change button text on the final slide
-                if (currentSlide === totalSlides) {
-                    document.getElementById('actionButton').innerText = "Forever ❤️";
-                }
-            } else {
-                // If they click past the final slide, keep them on the final romantic screen smoothly
-                currentSlide = totalSlides;
-                document.getElementById(`slide${totalSlides}`).classList.add('active');
-                document.getElementById('actionButton').classList.add('hidden');
             }
+        }
+
+        // Playful Alert logic for the Kids slide
+        function playfulRejectKids() {
+            alert("Error: ❌ High intelligence genes are strictly mandatory for the future! Try again. 🧠😉");
+        }
+
+        // Playful dynamic transformation for Marriage proposal slide
+        function playfulRejectMarry() {
+            const noBtn = document.getElementById('marryNoBtn');
+            noBtn.innerText = "Yes anyway! 😏";
+            noBtn.style.background = "linear-gradient(90deg, #ff758c, #ff7eb3)";
+            
+            // Turn it into a success click so he moves forward to the trap ending
+            noBtn.onclick = nextSlide;
         }
     </script>
 </body>
